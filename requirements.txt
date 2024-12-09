@@ -1,1 +1,7 @@
 streamlit
+streamlit_oauth
+streamlit-cookies-controller
+
+openai
+
+PyYAML
