@@ -118,30 +118,17 @@ if 'login' in st.session_state:
                         "ID": 1,
                         "pergunta": "Qual o dia do pagamento?",
                         "resposta": "Até o dia 10 de cada mês, caso dia 10 for um feriado! será no próximo dia útil.",
-                        "data": "2023-12-08",
                         "resposavel": "RH"
                     },
                     {
                         "ID": 2,
                         "pergunta": "Qual o dia do aniversário da empresa CTC?",
                         "resposta": "O aniversário da empresa é 1 de janeiro.",
-                        "data": "2023-12-08",
                         "resposavel": "Diretoria"
                     },
                 ]
 
                 df = pd.DataFrame( data )
-
-                # Conversão da coluna 'data' para o tipo datetime
-                df['data'] = pd.to_datetime(df['data'], errors='coerce')
-
-                # Verificação de valores não convertidos
-                if df['data'].isnull().any():
-                    print("Algumas datas não foram convertidas corretamente.")
-
-                # Formatação da coluna 'data' para o formato 'DD/MM/YYYY'
-                df['data'] = df['data'].dt.strftime('%d/%m/%Y')
-
                 df.to_json(json_descomplica_geral, orient='records', lines=True)
 
         # Show a section to add a new faq.
@@ -152,7 +139,6 @@ if 'login' in st.session_state:
         with st.form("add_faq_form"):
             pergunta   = st.text_input(label="Descreva a pergunta")
             resposta   = st.text_area(label="Descreva a resposta")
-            data       = st.date_input(label="Data", value=datetime.datetime.now())
             resposavel = st.selectbox("Resposável pela informação", ["RH", "Comercial", "Diretoria", "Outros"])
             submitted  = st.form_submit_button("Salvar")
 
@@ -166,7 +152,6 @@ if 'login' in st.session_state:
                         "ID" : recent_faq_number+1,
                         "pergunta": pergunta,
                         "resposta": resposta,
-                        "data": datetime.datetime.now(),
                         "resposavel" : resposavel
                     }
                 ]
@@ -188,9 +173,6 @@ if 'login' in st.session_state:
             icon="✍️",
         )
 
-        # Supondo que df seja o seu DataFrame
-        df['data'] = pd.to_datetime(df['data'], errors='coerce')
-
         edited_df = st.data_editor(
             df,
             use_container_width=True,
@@ -208,12 +190,6 @@ if 'login' in st.session_state:
                     label="Resposável",
                     help="Resposável",
                     options=["RH", "Comercial", "Diretoria", "Outros"],
-                ),
-                "data": st.column_config.DateColumn(
-                    label="Data",
-                    #min_value=date(2024, 1, 1),
-                    #max_value=date(2025, 12, 31),
-                    format='DD/MM/YYYY'
                 )
             },
 
